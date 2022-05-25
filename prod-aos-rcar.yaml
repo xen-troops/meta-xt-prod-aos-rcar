@@ -400,7 +400,6 @@ parameters:
               layers:
                 - "../meta-aos"
               conf:
-                - [AOS_VIS_PLUGINS, "telemetryemulatoradapter"]
                 - [DISTRO_FEATURES_append, " vis"]
           domf:
             sources:
@@ -411,6 +410,5 @@ parameters:
               layers:
                 - "../meta-aos"
               conf:
-                - [AOS_VIS_PLUGINS, "telemetryemulatoradapter"]
                 - [DISTRO_FEATURES_append, " vis"]
 
