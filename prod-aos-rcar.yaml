@@ -123,7 +123,7 @@ components:
     sources:
       - *COMMON_SOURCES
       - type: git
-        url: "https://github.com/iusyk/meta-xt-prod-aos.git"
+        url: "https://github.com/iusyk/meta-xt-prod-aos-rcar.git"
         rev: moulin
       
     builder:
@@ -167,7 +167,7 @@ components:
         - "../meta-xt-common/meta-xt-dom0"
         - "../meta-xt-common/meta-xt-control-domain"
         - "../meta-xt-rcar/meta-xt-rcar-dom0"
-        - "../meta-xt-prod-aos/meta-xt-prod-aos-rcar-control"
+        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-control"
         - "../poky/meta-yocto-bsp"
       build_target: core-image-thin-initramfs
       external_src:
@@ -191,7 +191,7 @@ components:
         url: "git://git.yoctoproject.org/meta-selinux"
         rev: dunfell
       - type: git
-        url: "https://github.com/iusyk/meta-xt-prod-aos.git"
+        url: "https://github.com/iusyk/meta-xt-prod-aos-rcar.git"
         rev: moulin
 
     builder:
@@ -233,8 +233,8 @@ components:
         - "../meta-xt-common/meta-xt-driver-domain"
         - "../meta-xt-rcar/meta-xt-rcar-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
-        - "../meta-xt-prod-aos/meta-aos-tune"
-        - "../meta-xt-prod-aos/meta-xt-prod-aos-rcar-driver-domain"
+        - "../meta-xt-prod-aos-rcar/meta-aos-tune"
+        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-driver-domain"
         - "../meta-aos"
       target_images:
         - "tmp/deploy/images/%{MACHINE}/Image"
@@ -254,7 +254,7 @@ components:
         url: "git://git.yoctoproject.org/meta-selinux"
         rev: dunfell
       - type: git
-        url: "https://github.com/iusyk/meta-xt-prod-aos.git"
+        url: "https://github.com/iusyk/meta-xt-prod-aos-rcar.git"
         rev: moulin
 
     builder:
@@ -306,7 +306,7 @@ components:
         - "../meta-virtualization"
         - "../meta-aos"
         - "../meta-renesas/meta-rcar-gen3"
-        - "../meta-xt-prod-aos/meta-xt-prod-aos-rcar-domu"
+        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domu"
         - "../meta-linaro/meta-optee"
         - "../meta-xt-common/meta-xt-domx"
         - "../meta-xt-common/meta-xt-domu"
