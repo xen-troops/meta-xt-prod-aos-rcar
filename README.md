@@ -125,3 +125,14 @@ DATA WILL BE LOST**.
 
 For more information about `rouge` check its
 [manual](https://moulin.readthedocs.io/en/latest/rouge.html).
+
+# Working with AOS
+
+## Keys generation
+[manual](https://docs.aoscloud.io/bin/view/Home/Cookbooks/Aos%20SDK/aos-keys/)
+
+## Provisioning
+[manual](https://docs.aoscloud.io/bin/view/Home/Cookbooks/Aos%20SDK/aos-prov/)
+
+## Signing
+[manual](https://docs.aoscloud.io/bin/view/Home/Cookbooks/Aos%20SDK/aos-signer/)
