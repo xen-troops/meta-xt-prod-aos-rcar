@@ -309,17 +309,6 @@ parameters:
           XT_DOMD_DTB_NAME: "r8a7795-salvator-x-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-x-xen.dtb"
 
-    h3ulcb:
-      overrides:
-        variables:
-          MACHINE: "h3ulcb"
-          SOC_FAMILY: "r8a7795"
-          XT_DOMD_CONFIG_NAME: "domd-h3ulcb.cfg"
-          XT_DOMF_CONFIG_NAME: "domf-generic-h3.cfg"
-          XT_OP_TEE_FLAVOUR: "salvator_h3"
-          XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-domd.dtb"
-          XT_XEN_DTB_NAME: "r8a77951-h3ulcb-xen.dtb"
-
     h3ulcb-4x2g:
       overrides:
         variables:
