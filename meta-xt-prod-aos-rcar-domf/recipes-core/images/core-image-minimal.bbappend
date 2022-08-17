@@ -1,1 +1,4 @@
-IMAGE_INSTALL_append = " domu-network"
+IMAGE_INSTALL_append = " \
+    bash \
+    domu-network \
+"
