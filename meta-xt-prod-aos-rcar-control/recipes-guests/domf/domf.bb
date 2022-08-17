@@ -10,15 +10,13 @@ inherit externalsrc systemd
 EXTERNALSRC_SYMLINKS = ""
 
 SRC_URI = "\
-    file://${XT_DOMF_CONFIG_NAME} \
-    file://domf-vdevices.cfg \
+    file://domf.cfg \
     file://domf.service \
     file://domf-set-root \
 "
 
 FILES_${PN} = " \
     ${sysconfdir}/xen/domf.cfg \
-    ${libdir}/xen/boot/domf.dtb \
     ${libdir}/xen/boot/linux-domf \
     ${libdir}/xen/bin/domf-set-root \
     ${systemd_system_unitdir}/domf.service \
@@ -29,8 +27,7 @@ SYSTEMD_SERVICE_${PN} = "domf.service"
 do_install() {
     install -d ${D}${sysconfdir}/xen
     install -d ${D}${libdir}/xen/boot
-    install -m 0644 ${WORKDIR}/${XT_DOMF_CONFIG_NAME} ${D}${sysconfdir}/xen/domf.cfg
-    install -m 0644 ${S}/${XT_DOMF_DTB_NAME} ${D}${libdir}/xen/boot/domf.dtb
+    install -m 0644 ${WORKDIR}/domf.cfg ${D}${sysconfdir}/xen
     install -m 0644 ${S}/Image ${D}${libdir}/xen/boot/linux-domf
 
     install -d ${D}${systemd_system_unitdir}

@@ -5,6 +5,7 @@ DOMF_CFG_FILE="/etc/xen/domf.cfg"
 
 # detect boot storage device
 BOOT_STORAGE=$(cat /proc/device-tree/boot_dev/device)
+
 if [ -z "$BOOT_STORAGE" ]; then
     BOOT_STORAGE=mmcblk1
 
