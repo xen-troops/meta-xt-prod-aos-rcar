@@ -60,6 +60,11 @@ common_data:
     # Do not install kernel image to rootfs to decrease initrd size
     - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
 
+    # Initramfs configuration
+    - [INITRAMFS_IMAGE, "core-image-tiny-initramfs"]
+    - [INITRAMFS_IMAGE_BUNDLE, "0"]
+    - [INITRAMFS_FSTYPES, "cpio.gz"]
+
 components:
   dom0:
     build-dir: "%{YOCTOS_WORK_DIR}"

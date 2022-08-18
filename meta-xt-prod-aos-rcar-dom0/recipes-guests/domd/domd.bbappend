@@ -6,6 +6,7 @@ SRC_URI += " \
 
 FILES_${PN} += " \
     ${libdir}/xen/bin/domd-set-root \
+    ${libdir}/xen/boot/initramfs-domd \
 "
 
 do_install_append() {
@@ -22,4 +23,7 @@ do_install_append() {
     # Call domd-set-root script
     echo "[Service]" >> ${D}${systemd_system_unitdir}/domd.service
     echo "ExecStartPre=${libdir}/xen/bin/domd-set-root" >> ${D}${systemd_system_unitdir}/domd.service
+
+    # Install domd initramfs
+    install -m 0644 ${S}/initramfs-domd.rootfs.cpio.gz ${D}${libdir}/xen/boot/initramfs-domd
 }

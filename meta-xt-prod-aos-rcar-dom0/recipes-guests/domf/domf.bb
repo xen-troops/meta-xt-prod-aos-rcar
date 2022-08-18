@@ -18,6 +18,7 @@ SRC_URI = " \
 FILES_${PN} = " \
     ${sysconfdir}/xen/domf.cfg \
     ${libdir}/xen/boot/linux-domf \
+    ${libdir}/xen/boot/initramfs-domf \
     ${libdir}/xen/bin/domf-set-root \
     ${systemd_system_unitdir}/domf.service \
 "
@@ -35,4 +36,7 @@ do_install() {
 
     install -d ${D}${libdir}/xen/bin
     install -m 0744 ${WORKDIR}/domf-set-root ${D}${libdir}/xen/bin
+
+    # Install domf initramfs
+    install -m 0644 ${S}/initramfs-domf.rootfs.cpio.gz ${D}${libdir}/xen/boot/initramfs-domf
 }
