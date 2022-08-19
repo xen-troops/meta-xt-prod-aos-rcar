@@ -57,6 +57,9 @@ common_data:
     # HACK: force ipk instead of rpm b/c it makes troubles to PVR UM build otherwise
     - [PACKAGE_CLASSES, "package_ipk"]
 
+    # Do not install kernel image to rootfs to decrease initrd size
+    - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
+
 components:
   dom0:
     build-dir: "%{YOCTOS_WORK_DIR}"
