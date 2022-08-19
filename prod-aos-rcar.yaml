@@ -44,6 +44,10 @@ common_data:
     # Use hypervisor console on all guests
     - [SERIAL_CONSOLES, "115200;hvc0"]
 
+    # Aos configuration
+    - [BOARD_MODEL, "%{AOS_BOARD_MODEL}"]
+    - [BOARD_VERSION, "%{AOS_BOARD_VERSION}"]
+
   # Conf options for domain that are built used renesas layer
   domd_domf_conf: &DOMD_DOMF_CONF
     - [INIT_MANAGER, "systemd"]
@@ -272,6 +276,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-ab-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-ab-xen.dtb"
+          AOS_BOARD_MODEL: "h3ulcb-4x2g-ab"
+          AOS_BOARD_VERSION: "1.0"
 
     h3ulcb-4x2g:
       overrides:
@@ -282,6 +288,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-xen.dtb"
+          AOS_BOARD_MODEL: "h3ulcb-4x2g"
+          AOS_BOARD_VERSION: "1.0"
 
     h3ulcb-4x2g-kf:
       overrides:
@@ -292,6 +300,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-kf-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-kf-xen.dtb"
+          AOS_BOARD_MODEL: "h3ulcb-4x2g-kf"
+          AOS_BOARD_VERSION: "1.0"
 
         components:
           domd:
@@ -316,6 +326,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_m3"
           XT_DOMD_DTB_NAME: "r8a7796-m3ulcb-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7796-m3ulcb-xen.dtb"
+          AOS_BOARD_MODEL: "m3ulcb"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-x-m3:
       overrides:
@@ -326,6 +338,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_m3"
           XT_DOMD_DTB_NAME: "r8a77960-%{MACHINE}-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77960-%{MACHINE}-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-x-m3"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-xs-m3-2x4g:
       # This is not misprint. This machine has 2x4 memory config
@@ -337,6 +351,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_m3_2x4g"
           XT_DOMD_DTB_NAME: "r8a77961-salvator-xs-2x4g-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77961-salvator-xs-2x4g-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-xs-m3-2x4g"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-xs-h3:
       overrides:
@@ -347,6 +363,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3"
           XT_DOMD_DTB_NAME: "r8a7795-salvator-xs-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-xs-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-xs-h3"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-xs-h3-4x2g:
       overrides:
@@ -357,6 +375,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a7795-salvator-xs-4x2g-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-xs-4x2g-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-xs-h3-4x2g"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-x-h3-4x2g:
       overrides:
@@ -367,6 +387,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a7795-salvator-x-4x2g-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-x-4x2g-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-x-h3-4x2g"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-x-h3:
       overrides:
@@ -377,3 +399,5 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3"
           XT_DOMD_DTB_NAME: "r8a7795-salvator-x-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-x-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-x-h3"
+          AOS_BOARD_VERSION: "1.0"
