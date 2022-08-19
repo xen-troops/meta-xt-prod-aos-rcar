@@ -172,6 +172,7 @@ components:
         - "../meta-xt-rcar/meta-xt-rcar-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
         - "../meta-xt-rcar/meta-xt-rcar-domx"
+        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domx"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domd"
 
       target_images:
@@ -211,6 +212,7 @@ components:
         - "../meta-arm/meta-arm-toolchain"
         - "../meta-xt-common/meta-xt-domu"
         - "../meta-xt-common/meta-xt-domx"
+        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domx"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domf"
 
       build_target: core-image-minimal

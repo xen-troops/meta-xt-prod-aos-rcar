@@ -5,3 +5,8 @@ IMAGE_INSTALL_append = " \
     bash \
     domu-network \
 "
+
+# System components
+IMAGE_INSTALL_append = " \
+    openssh \
+"
