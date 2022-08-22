@@ -9,7 +9,7 @@ inherit externalsrc systemd
 
 EXTERNALSRC_SYMLINKS = ""
 
-SRC_URI = "\
+SRC_URI = " \
     file://domf.cfg \
     file://domf.service \
     file://domf-set-root \
