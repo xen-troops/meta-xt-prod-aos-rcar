@@ -20,6 +20,11 @@ IMAGE_INSTALL_append = " \
     openssh \
 "
 
+# Aos components
+IMAGE_INSTALL_append = " \
+    aos-vis \
+"
+
 # Aos related tasks
 
 ROOTFS_POSTPROCESS_COMMAND += "set_board_model; "

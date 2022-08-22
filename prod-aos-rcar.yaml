@@ -162,6 +162,9 @@ components:
         # Add Capacity Aware migration Strategy (CAS)
         - [MACHINE_FEATURES_append, " cas"]
 
+        # Aos configuration
+        - [VIS_DATA_PROVIDER, "%{AOS_VIS_DATA_PROVIDER}"]
+
       build_target: core-image-minimal
       layers:
         - "../poky/meta"
@@ -406,3 +409,17 @@ parameters:
           XT_XEN_DTB_NAME: "r8a7795-salvator-x-xen.dtb"
           AOS_BOARD_MODEL: "salvator-x-h3"
           AOS_BOARD_VERSION: "1.0"
+
+  # Aos VIS data provider
+  VIS_DATA_PROVIDER:
+    desc: "Sepecifieds plugin for VIS automotive data"
+    telemetryemulator:
+      default: true
+      overrides:
+        variables:
+          AOS_VIS_DATA_PROVIDER: "telemetryemulatoradapter"
+
+    renesassimulator:
+      overrides:
+        variables:
+          AOS_VIS_DATA_PROVIDER: "renesassimulatoradapter"
