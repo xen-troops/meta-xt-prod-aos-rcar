@@ -30,6 +30,9 @@ common_data:
       url: "https://github.com/xen-troops/meta-xt-rcar.git"
       rev: master
     - type: git
+      url: "https://github.com/aoscloud/meta-aos.git"
+      rev: v5.2.1
+    - type: git
       url: "https://github.com/xen-troops/meta-xt-prod-aos-rcar.git"
       rev: main
 
@@ -176,6 +179,7 @@ components:
         - "../meta-xt-rcar/meta-xt-rcar-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
         - "../meta-xt-rcar/meta-xt-rcar-domx"
+        - "../meta-aos"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domx"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domd"
 
@@ -216,6 +220,7 @@ components:
         - "../meta-arm/meta-arm-toolchain"
         - "../meta-xt-common/meta-xt-domu"
         - "../meta-xt-common/meta-xt-domx"
+        - "../meta-aos"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domx"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domf"
 
