@@ -10,3 +10,8 @@ IMAGE_INSTALL_append = " \
 IMAGE_INSTALL_append = " \
     openssh \
 "
+
+# Aos components
+IMAGE_INSTALL_append = " \
+    aos-iamanager \
+"

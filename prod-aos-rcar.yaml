@@ -231,6 +231,7 @@ components:
       target_images:
         - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
         - "tmp/deploy/images/%{GENERIC_MACHINE}/core-image-minimal-%{GENERIC_MACHINE}.ext4"
+        - "tmp/work/generic_armv8_xt-poky-linux/core-image-minimal/1.0-r0/rootfs/var/aos/.unprovisioned"
 
 images:
   full:
@@ -269,6 +270,8 @@ images:
         gpt_type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4 # Linux filesystem data
         type: ext4
         size: 512 MiB
+        files:
+          ".unprovisioned": "%{YOCTOS_WORK_DIR}/build-domf/tmp/work/generic_armv8_xt-poky-linux/core-image-minimal/1.0-r0/rootfs/var/aos/.unprovisioned"
 
 parameters:
   # Machines
