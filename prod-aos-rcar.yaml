@@ -180,6 +180,9 @@ components:
     build-dir: "%{YOCTOS_WORK_DIR}"
     sources:
       - *COMMON_SOURCES
+      - type: git
+        url: "git://git.yoctoproject.org/meta-arm"
+        rev: dunfell
 
     builder:
       type: yocto
@@ -190,6 +193,7 @@ components:
         - [MACHINE, "%{GENERIC_MACHINE}"]
         - [PREFERRED_PROVIDER_virtual/kernel, "linux-generic-armv8"]
         - [XT_DOM_NAME, "domf"]
+        - [XT_OP_TEE_FLAVOUR, "%{XT_OP_TEE_FLAVOUR}"]
         - [IMAGE_FSTYPES_append, " ext4"]
 
       layers:
@@ -198,6 +202,8 @@ components:
         - "../meta-openembedded/meta-python"
         - "../meta-openembedded/meta-networking"
         - "../meta-virtualization"
+        - "../meta-arm/meta-arm"
+        - "../meta-arm/meta-arm-toolchain"
         - "../meta-xt-common/meta-xt-domu"
         - "../meta-xt-common/meta-xt-domx"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domf"
