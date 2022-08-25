@@ -9,3 +9,5 @@ IMAGE_INSTALL_append = " \
     optee-os \
     block \
 "
+
+IMAGE_INSTALL_remove = "optee-client"
