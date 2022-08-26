@@ -273,6 +273,11 @@ images:
         files:
           ".unprovisioned": "%{YOCTOS_WORK_DIR}/build-domf/tmp/work/generic_armv8_xt-poky-linux/core-image-minimal/1.0-r0/rootfs/var/aos/.unprovisioned"
 
+      domf_aos:
+        gpt_type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4 # Linux filesystem data
+        type: ext4
+        size: 1024 MiB
+
 parameters:
   # Machines
   MACHINE:
