@@ -7,6 +7,7 @@ LINUX_VERSION = "5.10.0"
 SRC_URI = " \
     git://github.com/xen-troops/linux.git;branch=${BRANCH} \
     file://defconfig \
-  "
+    file://aos.cfg \
+"
 
 LINUX_KERNEL_TYPE = "standard"
