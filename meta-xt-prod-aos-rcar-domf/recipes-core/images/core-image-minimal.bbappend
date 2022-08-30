@@ -15,4 +15,5 @@ IMAGE_INSTALL_append = " \
 IMAGE_INSTALL_append = " \
     aos-iamanager \
     aos-communicationmanager \
+    aos-servicemanager \
 "
