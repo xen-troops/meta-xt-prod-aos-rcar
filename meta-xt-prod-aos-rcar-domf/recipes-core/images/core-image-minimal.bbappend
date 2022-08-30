@@ -14,4 +14,5 @@ IMAGE_INSTALL_append = " \
 # Aos components
 IMAGE_INSTALL_append = " \
     aos-iamanager \
+    aos-communicationmanager \
 "
