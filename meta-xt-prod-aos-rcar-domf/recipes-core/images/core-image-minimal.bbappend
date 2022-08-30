@@ -16,6 +16,7 @@ IMAGE_INSTALL_append = " \
     aos-iamanager \
     aos-communicationmanager \
     aos-servicemanager \
+    aos-updatemanager \
 "
 
 # Aos related tasks
