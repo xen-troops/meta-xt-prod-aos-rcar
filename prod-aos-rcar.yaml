@@ -216,6 +216,9 @@ components:
         - [XT_OP_TEE_FLAVOUR, "%{XT_OP_TEE_FLAVOUR}"]
         - [IMAGE_FSTYPES_append, " ext4"]
 
+        # Aos configuration
+        - [AOS_RUNNER, "crun"]
+
       layers:
         - "../meta-openembedded/meta-filesystems"
         - "../meta-openembedded/meta-networking"
