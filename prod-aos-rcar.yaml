@@ -13,9 +13,16 @@ variables:
 
   # Aos configuration
   AOS_BUNDLE_IMAGE_VERSION: "1.0.0"
+  AOS_BUNDLE_REF_VERSION: "0.9.0"
   AOS_DOM0_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
   AOS_DOMD_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
   AOS_DOMF_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
+  AOS_BUNDLE_OSTREE_REPO: "${TOPDIR}/../../rootfs_repo"
+  AOS_DOMD_REF_VERSION: "%{AOS_BUNDLE_REF_VERSION}"
+  AOS_DOMF_REF_VERSION: "%{AOS_BUNDLE_REF_VERSION}"
+  AOS_BUNDLE_DOM0_TYPE: "full"
+  AOS_BUNDLE_DOMD_TYPE: "full"
+  AOS_BUNDLE_DOMF_TYPE: "full"
 
 common_data:
   # Sources used by all yocto-based domains
@@ -93,6 +100,7 @@ components:
         - [MACHINE, "%{GENERIC_MACHINE}"]
         - [XT_DOMD_CONFIG_NAME, "%{XT_DOMD_CONFIG_NAME}"]
         - [XT_DOMD_DTB_NAME, "%{XT_DOMD_DTB_NAME}"]
+        - [XT_XEN_DTB_NAME, "%{XT_XEN_DTB_NAME}"]
         - [XT_DOM_NAME, "dom0"]
         - [XT_GUEST_INSTALL, "domd domf"]
 
@@ -113,7 +121,19 @@ components:
         - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
 
         # Aos configuration
+        - [BUNDLE_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
         - [DOM0_IMAGE_VERSION, "%{AOS_DOM0_IMAGE_VERSION}"]
+        - [DOMD_IMAGE_VERSION, "%{AOS_DOMD_IMAGE_VERSION}"]
+        - [DOMF_IMAGE_VERSION, "%{AOS_DOMF_IMAGE_VERSION}"]
+        - [BUNDLE_DIR, "${TOPDIR}/../../"]
+        - [BUNDLE_OSTREE_REPO, "%{AOS_BUNDLE_OSTREE_REPO}"]
+        - [BUNDLE_DOM0_TYPE, "%{AOS_BUNDLE_DOM0_TYPE}"]
+        - [BUNDLE_DOMD_TYPE, "%{AOS_BUNDLE_DOMD_TYPE}"]
+        - [BUNDLE_DOMF_TYPE, "%{AOS_BUNDLE_DOMF_TYPE}"]
+        - [DOMD_REF_VERSION, "%{AOS_DOMD_REF_VERSION}"]
+        - [DOMF_REF_VERSION, "%{AOS_DOMF_REF_VERSION}"]
+        - [DOMD_MACHINE, "%{MACHINE}"]
+        - [DOMF_MACHINE, "%{GENERIC_MACHINE}"]
 
       layers:
         - "../meta-virtualization"
@@ -125,6 +145,7 @@ components:
         - "../meta-xt-common/meta-xt-dom0"
         - "../meta-xt-common/meta-xt-control-domain"
         - "../meta-xt-rcar/meta-xt-rcar-dom0"
+        - "../meta-aos"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-dom0"
 
       build_target: core-image-thin-initramfs
