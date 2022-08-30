@@ -200,6 +200,9 @@ components:
       - type: git
         url: "git://git.yoctoproject.org/meta-arm"
         rev: dunfell
+      - type: git
+        url: "git://git.yoctoproject.org/meta-security"
+        rev: dunfell
 
     builder:
       type: yocto
@@ -214,13 +217,15 @@ components:
         - [IMAGE_FSTYPES_append, " ext4"]
 
       layers:
-        - "../meta-openembedded/meta-oe"
         - "../meta-openembedded/meta-filesystems"
-        - "../meta-openembedded/meta-python"
         - "../meta-openembedded/meta-networking"
+        - "../meta-openembedded/meta-oe"
+        - "../meta-openembedded/meta-perl"
+        - "../meta-openembedded/meta-python"
         - "../meta-virtualization"
         - "../meta-arm/meta-arm"
         - "../meta-arm/meta-arm-toolchain"
+        - "../meta-security"
         - "../meta-xt-common/meta-xt-domu"
         - "../meta-xt-common/meta-xt-domx"
         - "../meta-aos"
