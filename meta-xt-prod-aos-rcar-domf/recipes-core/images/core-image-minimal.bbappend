@@ -17,3 +17,13 @@ IMAGE_INSTALL_append = " \
     aos-communicationmanager \
     aos-servicemanager \
 "
+
+# Aos related tasks
+
+ROOTFS_POSTPROCESS_COMMAND += "set_rootfs_version; "
+
+set_rootfs_version() {
+    install -d ${IMAGE_ROOTFS}/etc/aos
+
+    echo "VERSION=\"${DOMF_IMAGE_VERSION}\"" > ${IMAGE_ROOTFS}/etc/aos/version
+}

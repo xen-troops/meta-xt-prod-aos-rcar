@@ -11,6 +11,12 @@ variables:
   XT_OP_TEE_FLAVOUR: "generic_dt"
   GENERIC_MACHINE: "generic-armv8-xt"
 
+  # Aos configuration
+  AOS_BUNDLE_IMAGE_VERSION: "1.0.0"
+  AOS_DOM0_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
+  AOS_DOMD_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
+  AOS_DOMF_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
+
 common_data:
   # Sources used by all yocto-based domains
   sources: &COMMON_SOURCES
@@ -106,6 +112,9 @@ components:
         # Do not install kernel image to rootfs to decrease initrd size
         - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
 
+        # Aos configuration
+        - [DOM0_IMAGE_VERSION, "%{AOS_DOM0_IMAGE_VERSION}"]
+
       layers:
         - "../meta-virtualization"
         - "../meta-openembedded/meta-oe"
@@ -128,6 +137,7 @@ components:
         - "%{DOMF_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
 
       target_images:
+        - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
         - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
         - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
 
@@ -163,6 +173,7 @@ components:
         - [MACHINE_FEATURES_append, " cas"]
 
         # Aos configuration
+        - [DOMD_IMAGE_VERSION, "%{AOS_DOMD_IMAGE_VERSION}"]
         - [VIS_DATA_PROVIDER, "%{AOS_VIS_DATA_PROVIDER}"]
 
       build_target: core-image-minimal
@@ -218,6 +229,7 @@ components:
 
         # Aos configuration
         - [AOS_RUNNER, "crun"]
+        - [DOMF_IMAGE_VERSION, "%{AOS_DOMF_IMAGE_VERSION}"]
 
       layers:
         - "../meta-openembedded/meta-filesystems"
@@ -251,6 +263,7 @@ images:
         type: ext4
         size: 128 MiB
         files:
+          "version": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
           "Image": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
           "uInitramfs": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
           "xen": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}.uImage"
