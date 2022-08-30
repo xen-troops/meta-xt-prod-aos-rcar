@@ -6,10 +6,12 @@ SRCREV = "${AUTOREV}"
 SRC_URI_append = " \
     file://aos_iamanager.cfg \
     file://aos-iamanager.service \
+    file://domd_provfinish.sh \
 "
 
 AOS_IAM_CERT_MODULES = " \
     certhandler/modules/pkcs11module \
+    certhandler/modules/swmodule \
 "
 
 AOS_IAM_IDENT_MODULES = " \
@@ -25,6 +27,7 @@ SYSTEMD_SERVICE_${PN} = "aos-iamanager.service"
 FILES_${PN} += " \
     ${sysconfdir} \
     ${systemd_system_unitdir} \
+    ${aos_opt_dir} \
     ${MIGRATION_SCRIPTS_PATH} \
 "
 
@@ -43,6 +46,9 @@ do_install_append() {
 
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${WORKDIR}/aos-iamanager.service ${D}${systemd_system_unitdir}
+
+    install -d ${D}${aos_opt_dir}
+    install -m 0755 ${WORKDIR}/domd_provfinish.sh ${D}${aos_opt_dir}
 
     install -d ${D}${MIGRATION_SCRIPTS_PATH}
     source_migration_path="/src/${GO_IMPORT}/database/migration"
