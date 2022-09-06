@@ -1,0 +1,17 @@
+[Unit]
+Description=DomD
+Requires=xendomains.service
+After=xendomains.service
+Wants=guestreboot@DomD.service
+Before=guestreboot@DomD.service
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/lib/xen/bin/domd-set-root
+ExecStart=/usr/sbin/xl create /etc/xen/domd.cfg
+ExecStop=/usr/sbin/xl shutdown -w DomD
+ExecStopPost=/usr/sbin/xl destroy DomD
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
