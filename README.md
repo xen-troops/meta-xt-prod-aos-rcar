@@ -130,3 +130,54 @@ interactive prompts and will overwrite your device right away.
 
 For more information about `rouge` check its
 [manual](https://moulin.readthedocs.io/en/latest/rouge.html).
+
+## Aos FOTA update
+
+### Prerequisites
+
+* Proper board configuration file should be set for the target systemd on the Aos cloud. doc/boardconfig.json contains
+board configuration for `h3ulcb-4x2g-ab` board. For other boards, component ids should be changed according to the
+following scheme: `${AOS_BOARD_MODEL}-${AOS_BOARD_VERSION}-dom[0,d,f]`;
+* Updating Dom0 requires special u-boot environment variables to be set: see doc/u-boot-env.md.
+
+### Generating Aos update image
+
+Aos update image generation is done by dom0 yocto. The Aos image requires
+moulin build is successfully done. It means, after doing any source changes,
+`ninja` build command should be issued before generating the Aos image.
+
+The following commands should be performed to generate the Aos image:
+
+```sh
+cd yocto/
+source poky/oe-init-build-env build-dom0/
+bitbake aos-update
+```
+
+It will generate Aos update image according to the Aos update variables set in
+`prod-aos-rcar.yaml` file. The default image location is your top build
+folder.
+
+Aos update variables:
+
+* `AOS_BUNDLE_IMAGE_VERSION` - specifies image version of all components included to
+the Aos update image. Individual component version can be assigned using
+`AOS_DOM0_IMAGE_VERSION` for Dom0, `AOS_DOMD_IMAGE_VERSION` for DomD, `AOS_DOMF_IMAGE_VERSION` for DomF;
+* `AOS_BUNDLE_OSTREE_REPO` - specifies path to ostree repo. ostree repo is required to generate incremental update.
+It is set to `${TOPDIR}/../../rootfs_repo` by default;
+* `AOS_BUNDLE_REF_VERSION` - used as default reference version for generating
+incremental component update. Individual component reference version can be
+specified using corresponding component variable: `AOS_DOMD_REF_VERSION` for DomD, `AOS_DOMF_REF_VERSION` for DomF;
+* `AOS_BUNDLE_DOM0_TYPE`, `AOS_BUNDLE_DOMD_TYPE`, `AOS_BUNDLE_DOMF_TYPE` - specifies component update type:
+  * `full` - full component update;
+  * `incremental` - incremental component update (supported only by DomD, DomF);
+  * if not set - the component update will not be included into the Aos update
+image.
+
+### Generating Aos update image example
+
+* perform required changes in the sources;
+* change the `AOS_BUNDLE_IMAGE_VERSION`;
+* set components build type if required (`AOS_BUNDLE_DOM0_TYPE`, `AOS_BUNDLE_DOMD_TYPE`, `AOS_BUNDLE_DOMF_TYPE`);
+* perform moulin build by issuing `ninja` build command;
+* generate Aos image update as described above.
