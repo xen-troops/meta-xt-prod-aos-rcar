@@ -1,4 +1,4 @@
-# meta-xt-prod-aos-rcar #
+# meta-xt-prod-aos-rcar
 
 This repository contains Renesas RCAR Gen3-specific Yocto layers for
 Aos distro and `moulin` project file to build it. Layers in this
@@ -9,7 +9,7 @@ Those layers *may* be added and used manually, but they were written
 with [Moulin](https://moulin.readthedocs.io/en/latest/) build system,
 as Moulin-based project files provide correct entries in local.conf
 
-# Moulin project file
+## Moulin project file
 
 Work is still in progress, but right now the following features are tested and working:
 
@@ -32,8 +32,9 @@ Features that are present but not tested:
 * Renesas Starter Kit Premiere (H3ULCB)
 * Renesas Starter Kit Pro (M3ULCB)
 
-# Building
-## Requirements
+## Building
+
+### Requirements
 
 1. Ubuntu 18.0+ or any other Linux distribution which is supported by Poky/OE
 2. Development packages for Yocto. Refer to [Yocto
@@ -44,26 +45,26 @@ Features that are present but not tested:
    `PATH` environment variable includes `${HOME}/.local/bin`.
 4. Ninja build system: `sudo apt install ninja-build` on Ubuntu
 
-## Fetching
+### Fetching
 
 You can fetch/clone this whole repository, but you actually need only
 one file from it: `prod-aos-rcar.yaml`. During build `moulin` will
 fetch this repository again into `yocto/` directory. So, to avoid
 possible confusion, we recommend to download only `prod-aos-rcar.yaml`:
 
-```
-# curl -O https://raw.githubusercontent.com/xen-troops/meta-xt-prod-aos-rcar/master/prod-aos-rcar.yaml
+```sh
+curl -O https://raw.githubusercontent.com/xen-troops/meta-xt-prod-aos-rcar/master/prod-aos-rcar.yaml
 ```
 
-## Building
+### Building
 
 Moulin is used to generate Ninja build file: `moulin
 prod-aos-rcar.yaml`. This project provides a number
 of additional options. You can use check them with
 `--help-config` command line option:
 
-```
-# moulin prod-aos-rcar.yaml --help-config
+```sh
+moulin prod-aos-rcar.yaml --help-config
 usage: moulin prod-aos-rcar.yaml
        [--MACHINE {h3ulcb-4x2g-ab,salvator-x-m3,salvator-xs-m3-2x4g,salvator-xs-h3,salvator-x-h3-4x2g}]
 
@@ -82,18 +83,18 @@ build the images. This will take some time and disk space, as it will
 built 3 separate Yocto images. Depending on internet speed, this will
 take 2-4 hours on Intel i7 with 32GB of RAM and 100 GB SSD.
 
-## Creating SD card image
+### Creating SD card image
 
 Image file can be created with `rouge` tool. This is a companion
 application for `moulin`.
 
 It can be invoked either as a standalone tool, or via Ninja.
 
-### Creating image(s) via Ninja
+#### Creating image(s) via Ninja
 
 Newer versions of `moulin` (>= 0.5) will generate additional Ninja targets:
 
- - `image-full`
+* `image-full`
 
 Thus, you can just run `ninja image-full` or `ninja full.img` which
 will generate the `full.img` in your build directory.
@@ -101,7 +102,7 @@ will generate the `full.img` in your build directory.
 Then you can use `dd` to write this image to your SD card. Don't
 forget `conv=sparse` option for `dd` to speed up writing.
 
-### Using `rouge` in standalone mode
+#### Using `rouge` in standalone mode
 
 In this mode you can write image right to SD card. But it requires
 additional options.
@@ -109,18 +110,18 @@ additional options.
 In standalone mode`rouge` accepts the same parameters like
 `--MACHINE` as `moulin` does.
 
-You can prepare image by running
+You can prepare image by running:
 
-```
-# rouge prod-aos-rcar.yaml -i full
+```sh
+rouge prod-aos-rcar.yaml -i full
 ```
 
 This will create file `full.img` in your current directory.
 
-Also you can write image directly to a SD card by running
+Also you can write image directly to a SD card by running:
 
-```
-# sudo rouge prod-aos-rcar.yaml -i full -so /dev/sdX
+```sh
+sudo rouge prod-aos-rcar.yaml -i full -so /dev/sdX
 ```
 
 **BE SURE TO PROVIDE CORRECT DEVICE NAME**. `rouge` have no
