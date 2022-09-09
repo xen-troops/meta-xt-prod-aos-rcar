@@ -165,6 +165,7 @@ components:
         - "../meta-xt-common/meta-xt-driver-domain"
         - "../meta-xt-rcar/meta-xt-rcar-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
+        - "../meta-xt-rcar/meta-xt-rcar-domx"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domd"
 
       target_images:
