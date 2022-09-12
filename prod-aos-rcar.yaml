@@ -11,6 +11,19 @@ variables:
   XT_OP_TEE_FLAVOUR: "generic_dt"
   GENERIC_MACHINE: "generic-armv8-xt"
 
+  # Aos configuration
+  AOS_BUNDLE_IMAGE_VERSION: "1.0.0"
+  AOS_BUNDLE_REF_VERSION: "0.9.0"
+  AOS_DOM0_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
+  AOS_DOMD_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
+  AOS_DOMF_IMAGE_VERSION: "%{AOS_BUNDLE_IMAGE_VERSION}"
+  AOS_BUNDLE_OSTREE_REPO: "${TOPDIR}/../../rootfs_repo"
+  AOS_DOMD_REF_VERSION: "%{AOS_BUNDLE_REF_VERSION}"
+  AOS_DOMF_REF_VERSION: "%{AOS_BUNDLE_REF_VERSION}"
+  AOS_BUNDLE_DOM0_TYPE: "full"
+  AOS_BUNDLE_DOMD_TYPE: "full"
+  AOS_BUNDLE_DOMF_TYPE: "full"
+
 common_data:
   # Sources used by all yocto-based domains
   sources: &COMMON_SOURCES
@@ -30,6 +43,9 @@ common_data:
       url: "https://github.com/xen-troops/meta-xt-rcar.git"
       rev: master
     - type: git
+      url: "https://github.com/aoscloud/meta-aos.git"
+      rev: v5.2.1
+    - type: git
       url: "https://github.com/xen-troops/meta-xt-prod-aos-rcar.git"
       rev: main
 
@@ -44,10 +60,13 @@ common_data:
     # Use hypervisor console on all guests
     - [SERIAL_CONSOLES, "115200;hvc0"]
 
+    # Aos configuration
+    - [BOARD_MODEL, "%{AOS_BOARD_MODEL}"]
+    - [BOARD_VERSION, "%{AOS_BOARD_VERSION}"]
+
   # Conf options for domain that are built used renesas layer
   domd_domf_conf: &DOMD_DOMF_CONF
-    - [DISTRO_FEATURES_append, " systemd"]
-    - [VIRTUAL-RUNTIME_init_manager, "systemd"]
+    - [INIT_MANAGER, "systemd"]
 
     # add the static lib to SDK toolchain
     - [SDKIMAGE_FEATURES_append, " staticdev-pkgs"]
@@ -57,6 +76,14 @@ common_data:
 
     # HACK: force ipk instead of rpm b/c it makes troubles to PVR UM build otherwise
     - [PACKAGE_CLASSES, "package_ipk"]
+
+    # Do not install kernel image to rootfs to decrease initrd size
+    - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
+
+    # Initramfs configuration
+    - [INITRAMFS_IMAGE, "core-image-tiny-initramfs"]
+    - [INITRAMFS_IMAGE_BUNDLE, "0"]
+    - [INITRAMFS_FSTYPES, "cpio.gz"]
 
 components:
   dom0:
@@ -73,6 +100,7 @@ components:
         - [MACHINE, "%{GENERIC_MACHINE}"]
         - [XT_DOMD_CONFIG_NAME, "%{XT_DOMD_CONFIG_NAME}"]
         - [XT_DOMD_DTB_NAME, "%{XT_DOMD_DTB_NAME}"]
+        - [XT_XEN_DTB_NAME, "%{XT_XEN_DTB_NAME}"]
         - [XT_DOM_NAME, "dom0"]
         - [XT_GUEST_INSTALL, "domd domf"]
 
@@ -87,11 +115,25 @@ components:
           ]
 
         # Enable systemd on dom0
-        - [DISTRO_FEATURES_append, " systemd"]
-        - [VIRTUAL-RUNTIME_init_manager, "systemd"]
+        - [INIT_MANAGER, "systemd"]
 
         # Do not install kernel image to rootfs to decrease initrd size
         - ["RDEPENDS_${KERNEL_PACKAGE_NAME}-base", ""]
+
+        # Aos configuration
+        - [BUNDLE_IMAGE_VERSION, "%{AOS_BUNDLE_IMAGE_VERSION}"]
+        - [DOM0_IMAGE_VERSION, "%{AOS_DOM0_IMAGE_VERSION}"]
+        - [DOMD_IMAGE_VERSION, "%{AOS_DOMD_IMAGE_VERSION}"]
+        - [DOMF_IMAGE_VERSION, "%{AOS_DOMF_IMAGE_VERSION}"]
+        - [BUNDLE_DIR, "${TOPDIR}/../../"]
+        - [BUNDLE_OSTREE_REPO, "%{AOS_BUNDLE_OSTREE_REPO}"]
+        - [BUNDLE_DOM0_TYPE, "%{AOS_BUNDLE_DOM0_TYPE}"]
+        - [BUNDLE_DOMD_TYPE, "%{AOS_BUNDLE_DOMD_TYPE}"]
+        - [BUNDLE_DOMF_TYPE, "%{AOS_BUNDLE_DOMF_TYPE}"]
+        - [DOMD_REF_VERSION, "%{AOS_DOMD_REF_VERSION}"]
+        - [DOMF_REF_VERSION, "%{AOS_DOMF_REF_VERSION}"]
+        - [DOMD_MACHINE, "%{MACHINE}"]
+        - [DOMF_MACHINE, "%{GENERIC_MACHINE}"]
 
       layers:
         - "../meta-virtualization"
@@ -103,7 +145,8 @@ components:
         - "../meta-xt-common/meta-xt-dom0"
         - "../meta-xt-common/meta-xt-control-domain"
         - "../meta-xt-rcar/meta-xt-rcar-dom0"
-        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-control"
+        - "../meta-aos"
+        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-dom0"
 
       build_target: core-image-thin-initramfs
       external_src:
@@ -115,6 +158,7 @@ components:
         - "%{DOMF_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
 
       target_images:
+        - "tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
         - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
         - "tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
 
@@ -149,6 +193,10 @@ components:
         # Add Capacity Aware migration Strategy (CAS)
         - [MACHINE_FEATURES_append, " cas"]
 
+        # Aos configuration
+        - [DOMD_IMAGE_VERSION, "%{AOS_DOMD_IMAGE_VERSION}"]
+        - [VIS_DATA_PROVIDER, "%{AOS_VIS_DATA_PROVIDER}"]
+
       build_target: core-image-minimal
       layers:
         - "../poky/meta"
@@ -165,6 +213,9 @@ components:
         - "../meta-xt-common/meta-xt-driver-domain"
         - "../meta-xt-rcar/meta-xt-rcar-fixups"
         - "../meta-xt-rcar/meta-xt-rcar-driver-domain"
+        - "../meta-xt-rcar/meta-xt-rcar-domx"
+        - "../meta-aos"
+        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domx"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domd"
 
       target_images:
@@ -178,6 +229,12 @@ components:
     build-dir: "%{YOCTOS_WORK_DIR}"
     sources:
       - *COMMON_SOURCES
+      - type: git
+        url: "git://git.yoctoproject.org/meta-arm"
+        rev: dunfell
+      - type: git
+        url: "git://git.yoctoproject.org/meta-security"
+        rev: dunfell
 
     builder:
       type: yocto
@@ -188,48 +245,99 @@ components:
         - [MACHINE, "%{GENERIC_MACHINE}"]
         - [PREFERRED_PROVIDER_virtual/kernel, "linux-generic-armv8"]
         - [XT_DOM_NAME, "domf"]
+        - [XT_OP_TEE_FLAVOUR, "%{XT_OP_TEE_FLAVOUR}"]
         - [IMAGE_FSTYPES_append, " ext4"]
 
+        # Aos configuration
+        - [AOS_RUNNER, "crun"]
+        - [DOMF_IMAGE_VERSION, "%{AOS_DOMF_IMAGE_VERSION}"]
+
       layers:
-        - "../meta-openembedded/meta-oe"
         - "../meta-openembedded/meta-filesystems"
-        - "../meta-openembedded/meta-python"
         - "../meta-openembedded/meta-networking"
+        - "../meta-openembedded/meta-oe"
+        - "../meta-openembedded/meta-perl"
+        - "../meta-openembedded/meta-python"
         - "../meta-virtualization"
+        - "../meta-arm/meta-arm"
+        - "../meta-arm/meta-arm-toolchain"
+        - "../meta-security"
         - "../meta-xt-common/meta-xt-domu"
         - "../meta-xt-common/meta-xt-domx"
+        - "../meta-aos"
+        - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domx"
         - "../meta-xt-prod-aos-rcar/meta-xt-prod-aos-rcar-domf"
 
       build_target: core-image-minimal
       target_images:
         - "tmp/deploy/images/%{GENERIC_MACHINE}/Image"
         - "tmp/deploy/images/%{GENERIC_MACHINE}/core-image-minimal-%{GENERIC_MACHINE}.ext4"
+        - "tmp/work/generic_armv8_xt-poky-linux/core-image-minimal/1.0-r0/rootfs/var/aos/.unprovisioned"
 
 images:
   full:
     type: gpt
     desc: "Full SD-card/eMMC image"
     partitions:
-      boot:
+      boot_a:
         gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
         type: ext4
         size: 128 MiB
         files:
+          "version": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
           "Image": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
           "uInitramfs": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
           "xen": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}.uImage"
           "xenpolicy": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
           "xen.dtb": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_XEN_DTB_NAME}"
 
+      boot_b:
+        gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
+        type: ext4
+        size: 128 MiB
+        files:
+          "version": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/aos/version"
+          "Image": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/Image"
+          "uInitramfs": "%{YOCTOS_WORK_DIR}/%{DOM0_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/uInitramfs"
+          "xen": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xen-%{MACHINE}.uImage"
+          "xenpolicy": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/xenpolicy-%{MACHINE}"
+          "xen.dtb": "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/%{XT_XEN_DTB_NAME}"
+
+      boot_env:
+        gpt_type: 21686148-6449-6E6F-744E-656564454649 # BIOS boot partition (kinda...)
+        type: vfat
+        size: 16 MiB
+
       domd_rootfs:
         gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
         type: raw_image
         image_path: "%{YOCTOS_WORK_DIR}/%{DOMD_BUILD_DIR}/tmp/deploy/images/%{MACHINE}/core-image-minimal-%{MACHINE}.ext4"
+        size: 1024 MiB
+
+      domd_var:
+        gpt_type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4 # Linux filesystem data
+        type: ext4
+        size: 1024 MiB
+        files:
+          ".unprovisioned": "%{YOCTOS_WORK_DIR}/build-domf/tmp/work/generic_armv8_xt-poky-linux/core-image-minimal/1.0-r0/rootfs/var/aos/.unprovisioned"
 
       domf-rootfs:
         gpt_type: B921B045-1DF0-41C3-AF44-4C6F280D3FAE # Linux aarch64 root
         type: raw_image
         image_path: "%{YOCTOS_WORK_DIR}/%{DOMF_BUILD_DIR}/tmp/deploy/images/%{GENERIC_MACHINE}/core-image-minimal-%{GENERIC_MACHINE}.ext4"
+        size: 1024 MiB # Currently we do not have separate Aos partition for DomD. Make RW partition enough size to download updates
+
+      domf_var:
+        gpt_type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4 # Linux filesystem data
+        type: ext4
+        size: 512 MiB
+        files:
+          ".unprovisioned": "%{YOCTOS_WORK_DIR}/build-domf/tmp/work/generic_armv8_xt-poky-linux/core-image-minimal/1.0-r0/rootfs/var/aos/.unprovisioned"
+
+      domf_aos:
+        gpt_type: 0FC63DAF-8483-4772-8E79-3D69D8477DE4 # Linux filesystem data
+        type: ext4
+        size: 1024 MiB
 
 parameters:
   # Machines
@@ -245,6 +353,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-ab-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-ab-xen.dtb"
+          AOS_BOARD_MODEL: "h3ulcb-4x2g-ab"
+          AOS_BOARD_VERSION: "1.0"
 
     h3ulcb-4x2g:
       overrides:
@@ -255,6 +365,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-xen.dtb"
+          AOS_BOARD_MODEL: "h3ulcb-4x2g"
+          AOS_BOARD_VERSION: "1.0"
 
     h3ulcb-4x2g-kf:
       overrides:
@@ -265,6 +377,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a77951-h3ulcb-4x2g-kf-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77951-h3ulcb-4x2g-kf-xen.dtb"
+          AOS_BOARD_MODEL: "h3ulcb-4x2g-kf"
+          AOS_BOARD_VERSION: "1.0"
 
         components:
           domd:
@@ -289,6 +403,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_m3"
           XT_DOMD_DTB_NAME: "r8a7796-m3ulcb-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7796-m3ulcb-xen.dtb"
+          AOS_BOARD_MODEL: "m3ulcb"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-x-m3:
       overrides:
@@ -299,6 +415,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_m3"
           XT_DOMD_DTB_NAME: "r8a77960-%{MACHINE}-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77960-%{MACHINE}-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-x-m3"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-xs-m3-2x4g:
       # This is not misprint. This machine has 2x4 memory config
@@ -310,6 +428,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_m3_2x4g"
           XT_DOMD_DTB_NAME: "r8a77961-salvator-xs-2x4g-domd.dtb"
           XT_XEN_DTB_NAME: "r8a77961-salvator-xs-2x4g-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-xs-m3-2x4g"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-xs-h3:
       overrides:
@@ -320,6 +440,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3"
           XT_DOMD_DTB_NAME: "r8a7795-salvator-xs-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-xs-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-xs-h3"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-xs-h3-4x2g:
       overrides:
@@ -330,6 +452,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a7795-salvator-xs-4x2g-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-xs-4x2g-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-xs-h3-4x2g"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-x-h3-4x2g:
       overrides:
@@ -340,6 +464,8 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3_4x2g"
           XT_DOMD_DTB_NAME: "r8a7795-salvator-x-4x2g-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-x-4x2g-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-x-h3-4x2g"
+          AOS_BOARD_VERSION: "1.0"
 
     salvator-x-h3:
       overrides:
@@ -350,3 +476,19 @@ parameters:
           XT_OP_TEE_FLAVOUR: "salvator_h3"
           XT_DOMD_DTB_NAME: "r8a7795-salvator-x-domd.dtb"
           XT_XEN_DTB_NAME: "r8a7795-salvator-x-xen.dtb"
+          AOS_BOARD_MODEL: "salvator-x-h3"
+          AOS_BOARD_VERSION: "1.0"
+
+  # Aos VIS data provider
+  VIS_DATA_PROVIDER:
+    desc: "Sepecifieds plugin for VIS automotive data"
+    telemetryemulator:
+      default: true
+      overrides:
+        variables:
+          AOS_VIS_DATA_PROVIDER: "telemetryemulatoradapter"
+
+    renesassimulator:
+      overrides:
+        variables:
+          AOS_VIS_DATA_PROVIDER: "renesassimulatoradapter"
