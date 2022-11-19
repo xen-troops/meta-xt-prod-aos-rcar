@@ -394,6 +394,13 @@ parameters:
                 # Ignore OP-TEE patches as we have own OP-TEE
                 - [BBMASK_append, "|meta-rcar-gen3-adas/recipes-bsp/optee"]
 
+        images:
+          full:
+            partitions:
+              domd_rootfs:
+                # For KF we have additional components so we need more space (min +200 MiB)
+                size: 2048 MiB
+
     m3ulcb:
       overrides:
         variables:
