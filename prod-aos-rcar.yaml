@@ -392,7 +392,7 @@ parameters:
                 - "../meta-xt-rcar/meta-xt-cogent-fixups"
               conf:
                 # Ignore OP-TEE patches as we have own OP-TEE
-                - [BBMASK_append, "|meta-rcar-gen3-adas/recipes-bsp/optee"]
+                - [BBMASK_append, " meta-rcar-gen3-adas/recipes-bsp/optee"]
 
     m3ulcb:
       overrides:
